@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head') %>
+</head>
+
+<body>
+    <div class="main-layout">
+        <%- include('../partials/sidebar') %>
+
+            <div class="main-content">
+                <%- include('../partials/header') %>
+
+                    <main>
+                        <div class="fade-in">
+                            <!-- Page Header -->
+                            <div class="card mb-4"
+                                style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); color: white; border: none;">
+                                <div class="card-body">
+                                    <h2
+                                        style="color: white; font-size: 1.75rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                                        <i class="fas fa-comments"></i>
+                                        All Feedback
+                                    </h2>
+                                    <p style="color: rgba(255,255,255,0.9); margin: 0;">Monitor all feedback
+                                        interactions across the system</p>
+                                </div>
+                            </div>
+
+                            <!-- Stats Cards -->
+                            <div class="stats-grid mb-4">
+                                <div class="stat-card">
+                                    <div class="stat-icon info">
+                                        <i class="fas fa-inbox"></i>
+                                    </div>
+                                    <div class="stat-value">
+                                        <%= stats.total %>
+                                    </div>
+                                    <div class="stat-label">Total Feedback</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon warning">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="stat-value">
+                                        <%= stats.pending %>
+                                    </div>
+                                    <div class="stat-label">Pending Response</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon success">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="stat-value">
+                                        <%= stats.replied %>
+                                    </div>
+                                    <div class="stat-label">Replied</div>
+                                </div>
+                            </div>
+
+                            <!-- Feedback List -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title" style="display: flex; align-items: center; gap: 0.75rem;">
+                                        <i class="fas fa-list"></i>
+                                        Feedback History
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <% if (feedback && feedback.length> 0) { %>
+                                        <div class="table-container">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Student</th>
+                                                        <th>Assigned Staff</th>
+                                                        <th>Subject</th>
+                                                        <th>Status</th>
+                                                        <th>Date</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% feedback.forEach(f=> { %>
+                                                        <tr>
+                                                            <td data-label="Student">
+                                                                <div
+                                                                    style="display: flex; align-items: center; gap: 0.75rem;">
+                                                                    <div
+                                                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, var(--success-color) 0%, var(--success-dark) 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.75rem;">
+                                                                        <%= f.student_name.charAt(0) %>
+                                                                    </div>
+                                                                    <span style="font-weight: 600;">
+                                                                        <%= f.student_name %>
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                            <td data-label="Staff">
+                                                                <div
+                                                                    style="display: flex; align-items: center; gap: 0.75rem;">
+                                                                    <div
+                                                                        style="width: 32px; height: 32px; background: linear-gradient(135deg, var(--warning-color) 0%, var(--warning-dark) 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.75rem;">
+                                                                        <%= f.staff_name.charAt(0) %>
+                                                                    </div>
+                                                                    <span style="font-weight: 600;">
+                                                                        <%= f.staff_name %>
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                            <td data-label="Subject">
+                                                                <div
+                                                                    style="max-width: 250px; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                                    <%= f.subject %>
+                                                                </div>
+                                                            </td>
+                                                            <td data-label="Status">
+                                                                <span
+                                                                    class="badge badge-<%= f.status === 'replied' ? 'success' : 'warning' %>">
+                                                                    <i
+                                                                        class="fas fa-<%= f.status === 'replied' ? 'check-circle' : 'clock' %>"></i>
+                                                                    <%= f.status %>
+                                                                </span>
+                                                            </td>
+                                                            <td data-label="Date">
+                                                                <div
+                                                                    style="font-size: 0.875rem; color: var(--gray-600);">
+                                                                    <i class="fas fa-calendar"></i>
+                                                                    <%= new Date(f.submitted_at).toLocaleDateString() %>
+                                                                </div>
+                                                            </td>
+                                                            <td data-label="Actions">
+                                                                <a href="/admin/feedback/<%= f.id %>"
+                                                                    class="btn btn-sm btn-primary">
+                                                                    <i class="fas fa-eye"></i> View
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        <% }) %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <% } else { %>
+                                            <div style="text-align: center; padding: 4rem 2rem;">
+                                                <div
+                                                    style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                                                    <i class="fas fa-comments"
+                                                        style="font-size: 2rem; color: var(--gray-400);"></i>
+                                                </div>
+                                                <h4 style="color: var(--gray-600); margin-bottom: 0.5rem;">No Feedback
+                                                    Found</h4>
+                                                <p style="color: var(--gray-500);">There is no feedback in the system
+                                                    yet.</p>
+                                            </div>
+                                            <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+
+                    <%- include('../partials/footer') %>
+            </div>
+    </div>
+
+    <script src="/js/main.js"></script>
+</body>
+
+</html>

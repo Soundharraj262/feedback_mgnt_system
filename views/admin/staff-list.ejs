@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head') %>
+</head>
+
+<body>
+    <div class="main-layout">
+        <%- include('../partials/sidebar') %>
+
+            <div class="main-content">
+                <%- include('../partials/header') %>
+
+                    <main>
+                        <div class="fade-in">
+                            <!-- Page Header with Action -->
+                            <div class="card mb-4"
+                                style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); color: white; border: none;">
+                                <div class="card-body"
+                                    style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+                                    <div>
+                                        <h2
+                                            style="color: white; font-size: 1.75rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                                            <i class="fas fa-users"></i>
+                                            Staff Management
+                                        </h2>
+                                        <p style="color: rgba(255,255,255,0.9); margin: 0;">Manage all staff members and
+                                            their assignments</p>
+                                    </div>
+                                    <a href="/admin/staff/add" class="btn"
+                                        style="background: white; color: var(--primary-color); font-weight: 700;">
+                                        <i class="fas fa-plus"></i> Add New Staff
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Staff List Card -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title" style="display: flex; align-items: center; gap: 0.75rem;">
+                                        <i class="fas fa-list"></i>
+                                        All Staff Members
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <% if (staff && staff.length> 0) { %>
+                                        <div class="table-container">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Staff Member</th>
+                                                        <th>Email</th>
+                                                        <th>Assigned Students</th>
+                                                        <th>Status</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% staff.forEach(s=> { %>
+                                                        <tr>
+                                                            <td data-label="Staff Member">
+                                                                <div
+                                                                    style="display: flex; align-items: center; gap: 1rem;">
+                                                                    <div
+                                                                        style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--warning-color) 0%, var(--warning-dark) 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.125rem; flex-shrink: 0;">
+                                                                        <%= s.name.charAt(0) %>
+                                                                    </div>
+                                                                    <div>
+                                                                        <div
+                                                                            style="font-weight: 700; font-size: 1rem; color: var(--gray-900);">
+                                                                            <%= s.name %>
+                                                                        </div>
+                                                                        <div
+                                                                            style="font-size: 0.875rem; color: var(--gray-500);">
+                                                                            Staff ID: <%= s.id %>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td data-label="Email">
+                                                                <div
+                                                                    style="display: flex; align-items: center; gap: 0.5rem;">
+                                                                    <i class="fas fa-envelope"
+                                                                        style="color: var(--gray-400);"></i>
+                                                                    <span>
+                                                                        <%= s.email %>
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                            <td data-label="Assigned Students">
+                                                                <div
+                                                                    style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--gray-100); padding: 0.5rem 1rem; border-radius: 9999px;">
+                                                                    <i class="fas fa-user-graduate"
+                                                                        style="color: var(--primary-color);"></i>
+                                                                    <span style="font-weight: 600;">
+                                                                        <%= s.student_count || 0 %> Students
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                            <td data-label="Status">
+                                                                <span
+                                                                    class="badge badge-<%= s.is_active ? 'success' : 'secondary' %>">
+                                                                    <i
+                                                                        class="fas fa-<%= s.is_active ? 'check-circle' : 'ban' %>"></i>
+                                                                    <%= s.is_active ? 'Active' : 'Inactive' %>
+                                                                </span>
+                                                            </td>
+                                                            <td data-label="Actions">
+                                                                <div
+                                                                    style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                                                    <a href="/admin/staff/edit/<%= s.id %>"
+                                                                        class="btn btn-sm btn-primary" title="Edit">
+                                                                        <i class="fas fa-edit"></i> Edit
+                                                                    </a>
+                                                                    <button
+                                                                        onclick="toggleStatus('/admin/staff/toggle/<%= s.id %>', 'staff')"
+                                                                        class="btn btn-sm btn-<%= s.is_active ? 'danger' : 'success' %>"
+                                                                        title="<%= s.is_active ? 'Deactivate' : 'Activate' %>">
+                                                                        <i
+                                                                            class="fas fa-<%= s.is_active ? 'ban' : 'check' %>"></i>
+                                                                        <%= s.is_active ? 'Deactivate' : 'Activate' %>
+                                                                    </button>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <% }) %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <% } else { %>
+                                            <div style="text-align: center; padding: 4rem 2rem;">
+                                                <div
+                                                    style="width: 100px; height: 100px; background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                                                    <i class="fas fa-users"
+                                                        style="font-size: 2.5rem; color: var(--gray-400);"></i>
+                                                </div>
+                                                <h4
+                                                    style="color: var(--gray-600); margin-bottom: 0.5rem; font-size: 1.25rem;">
+                                                    No Staff Members Found</h4>
+                                                <p
+                                                    style="color: var(--gray-500); font-size: 1rem; margin-bottom: 2rem;">
+                                                    Get started by adding your first staff member</p>
+                                                <a href="/admin/staff/add" class="btn btn-primary btn-lg">
+                                                    <i class="fas fa-plus"></i> Add First Staff Member
+                                                </a>
+                                            </div>
+                                            <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+
+                    <%- include('../partials/footer') %>
+            </div>
+    </div>
+
+    <script src="/js/main.js"></script>
+</body>
+
+</html>

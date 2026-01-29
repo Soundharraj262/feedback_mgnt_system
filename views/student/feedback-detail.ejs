@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head') %>
+</head>
+
+<body>
+    <div class="main-layout">
+        <%- include('../partials/sidebar') %>
+
+            <div class="main-content">
+                <%- include('../partials/header') %>
+
+                    <main>
+                        <div class="fade-in">
+                            <!-- Breadcrumb -->
+                            <div style="margin-bottom: 1.5rem;">
+                                <nav
+                                    style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: var(--gray-600);">
+                                    <a href="/student/dashboard" style="color: var(--gray-600); text-decoration: none;">
+                                        <i class="fas fa-home"></i> Dashboard
+                                    </a>
+                                    <i class="fas fa-chevron-right" style="font-size: 0.75rem;"></i>
+                                    <a href="/student/feedback" style="color: var(--gray-600); text-decoration: none;">
+                                        My Feedback
+                                    </a>
+                                    <i class="fas fa-chevron-right" style="font-size: 0.75rem;"></i>
+                                    <span style="color: var(--primary-color); font-weight: 600;">Feedback Detail</span>
+                                </nav>
+                            </div>
+
+                            <!-- Feedback Detail Card -->
+                            <div class="card mb-4">
+                                <div class="card-header"
+                                    style="background: linear-gradient(135deg, var(--success-color) 0%, var(--success-dark) 100%); color: white; border: none;">
+                                    <div
+                                        style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+                                        <h3
+                                            style="color: white; margin: 0; display: flex; align-items: center; gap: 0.75rem;">
+                                            <i class="fas fa-comment-dots"></i>
+                                            Your Feedback
+                                        </h3>
+                                        <span class="badge"
+                                            style="background: rgba(255,255,255,0.2); color: white; font-size: 0.875rem; padding: 0.5rem 1rem;">
+                                            <i
+                                                class="fas fa-<%= feedback.status === 'replied' ? 'check-circle' : 'clock' %>"></i>
+                                            <%= feedback.status %>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Staff Info -->
+                                    <div
+                                        style="display: flex; align-items: center; gap: 1rem; padding: 1.25rem; background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%); border-radius: var(--radius-lg); margin-bottom: 1.5rem; border-left: 4px solid var(--warning-color);">
+                                        <div
+                                            style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--warning-color) 0%, var(--warning-dark) 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.5rem; flex-shrink: 0;">
+                                            <%= feedback.staff_name.charAt(0) %>
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <div
+                                                style="font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gray-600); margin-bottom: 0.25rem;">
+                                                Sent To</div>
+                                            <div
+                                                style="font-weight: 700; font-size: 1.125rem; color: var(--gray-900); margin-bottom: 0.25rem;">
+                                                <%= feedback.staff_name %>
+                                            </div>
+                                            <div
+                                                style="font-size: 0.9375rem; color: var(--gray-600); display: flex; align-items: center; gap: 0.5rem;">
+                                                <i class="fas fa-envelope"></i>
+                                                <%= feedback.staff_email %>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Feedback Content -->
+                                    <div style="margin-bottom: 1.5rem;">
+                                        <div
+                                            style="font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gray-600); margin-bottom: 0.5rem;">
+                                            Subject</div>
+                                        <div
+                                            style="font-size: 1.25rem; font-weight: 700; color: var(--gray-900); margin-bottom: 1.5rem;">
+                                            <%= feedback.subject %>
+                                        </div>
+
+                                        <div
+                                            style="font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gray-600); margin-bottom: 0.5rem;">
+                                            Your Message</div>
+                                        <div
+                                            style="padding: 1.5rem; background: white; border: 2px solid var(--gray-200); border-radius: var(--radius-lg); line-height: 1.8; color: var(--gray-800); font-size: 1rem;">
+                                            <%= feedback.message %>
+                                        </div>
+                                    </div>
+
+                                    <!-- Metadata -->
+                                    <div
+                                        style="display: flex; gap: 2rem; padding-top: 1rem; border-top: 2px solid var(--gray-100); font-size: 0.875rem; color: var(--gray-600); flex-wrap: wrap;">
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <i class="fas fa-calendar"></i>
+                                            <span>Submitted: <%= new Date(feedback.submitted_at).toLocaleDateString() %>
+                                                    </span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <i class="fas fa-clock"></i>
+                                            <%= new Date(feedback.submitted_at).toLocaleTimeString() %>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <i class="fas fa-sync"></i>
+                                            <span>Updated: <%= new Date(feedback.updated_at).toLocaleDateString() %>
+                                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Replies Section -->
+                            <% if (feedback.status==='replied' && replies && replies.length> 0) { %>
+                                <div class="card" style="border: 2px solid var(--success-color);">
+                                    <div class="card-header"
+                                        style="background: linear-gradient(135deg, var(--success-color) 0%, var(--success-dark) 100%); color: white; border: none;">
+                                        <h3
+                                            style="color: white; margin: 0; display: flex; align-items: center; gap: 0.75rem;">
+                                            <i class="fas fa-reply"></i>
+                                            Staff Responses
+                                        </h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                                            <% replies.forEach((reply, index)=> { %>
+                                                <div
+                                                    style="padding: 1.5rem; background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%); border-left: 4px solid var(--success-color); border-radius: var(--radius-lg);">
+                                                    <div
+                                                        style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
+                                                        <div
+                                                            style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--warning-color) 0%, var(--warning-dark) 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.125rem;">
+                                                            <%= reply.staff_name.charAt(0) %>
+                                                        </div>
+                                                        <div style="flex: 1;">
+                                                            <div
+                                                                style="font-weight: 700; font-size: 1rem; color: var(--gray-900);">
+                                                                <%= reply.staff_name %>
+                                                            </div>
+                                                            <div
+                                                                style="font-size: 0.875rem; color: var(--gray-600); margin-top: 0.125rem;">
+                                                                <i class="fas fa-calendar"></i>
+                                                                <%= new Date(reply.replied_at).toLocaleDateString() %>
+                                                                    at <%= new
+                                                                        Date(reply.replied_at).toLocaleTimeString() %>
+                                                            </div>
+                                                        </div>
+                                                        <span class="badge badge-success">
+                                                            <i class="fas fa-reply"></i> Reply #<%= index + 1 %>
+                                                        </span>
+                                                    </div>
+                                                    <div
+                                                        style="padding: 1.25rem; background: white; border-radius: var(--radius-lg); line-height: 1.8; color: var(--gray-800); font-size: 1rem;">
+                                                        <%= reply.reply_message %>
+                                                    </div>
+                                                </div>
+                                                <% }) %>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% } else { %>
+                                    <div class="card" style="border: 2px solid var(--warning-color);">
+                                        <div class="card-body">
+                                            <div style="text-align: center; padding: 3rem 2rem;">
+                                                <div
+                                                    style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--warning-color) 0%, var(--warning-dark) 100%); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                                                    <i class="fas fa-hourglass-half"
+                                                        style="font-size: 2rem; color: white;"></i>
+                                                </div>
+                                                <h4
+                                                    style="color: var(--gray-700); margin-bottom: 0.5rem; font-size: 1.25rem;">
+                                                    Waiting for Response</h4>
+                                                <p style="color: var(--gray-600); font-size: 1rem;">Your assigned staff
+                                                    will respond to your feedback soon. You'll be notified when they
+                                                    reply.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% } %>
+
+                                        <!-- Back Button -->
+                                        <div style="margin-top: 2rem;">
+                                            <a href="/student/feedback" class="btn btn-secondary">
+                                                <i class="fas fa-arrow-left"></i> Back to My Feedback
+                                            </a>
+                                        </div>
+                        </div>
+                    </main>
+
+                    <%- include('../partials/footer') %>
+            </div>
+    </div>
+
+    <script src="/js/main.js"></script>
+</body>
+
+</html>

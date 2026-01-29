@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %> - Student Feedback Management
+    </title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="/css/main.css">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <% if (userRole) { %>
+        <!-- Logged in layout with sidebar -->
+        <div class="main-layout">
+            <%- include('partials/sidebar') %>
+
+                <div class="main-content">
+                    <%- include('partials/header') %>
+
+                        <!-- Main Content -->
+                        <main>
+                            <%- body %>
+                        </main>
+
+                        <%- include('partials/footer') %>
+                </div>
+        </div>
+        <% } else { %>
+            <!-- Public layout without sidebar -->
+            <main>
+                <%- body %>
+            </main>
+            <% } %>
+
+                <!-- Global JavaScript -->
+                <script src="/js/main.js"></script>
+</body>
+
+</html>

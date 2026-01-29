@@ -1,0 +1,557 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('partials/head') %>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: 'Inter', sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 24px;
+                position: relative;
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
+
+            /* Animated Background Wrapper */
+            .background-animation {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 0;
+                pointer-events: none;
+                overflow: hidden;
+            }
+
+            .background-animation::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+                background-size: 50px 50px;
+                animation: moveBackground 20s linear infinite;
+            }
+
+            @keyframes moveBackground {
+                0% {
+                    transform: translate(0, 0);
+                }
+
+                100% {
+                    transform: translate(50px, 50px);
+                }
+            }
+
+            .login-container {
+                position: relative;
+                z-index: 1;
+                width: 100%;
+                max-width: 450px;
+            }
+
+            .login-card {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                border-radius: 20px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                padding: 32px 32px;
+                animation: slideUp 0.5s ease-out;
+            }
+
+            @keyframes slideUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .logo-section {
+                text-align: center;
+                margin-bottom: 24px;
+            }
+
+            .logo-icon {
+                width: 60px;
+                height: 60px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-radius: 16px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 12px;
+                box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            }
+
+            .logo-icon i {
+                font-size: 28px;
+                color: white;
+            }
+
+            .logo-section h1 {
+                font-size: 28px;
+                font-weight: 700;
+                color: #1a202c;
+                margin-bottom: 8px;
+            }
+
+            .logo-section p {
+                color: #718096;
+                font-size: 15px;
+            }
+
+            .role-selector {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+                margin-bottom: 24px;
+            }
+
+            .role-option {
+                position: relative;
+                cursor: pointer;
+            }
+
+            .role-option input[type="radio"] {
+                position: absolute;
+                opacity: 0;
+            }
+
+            .role-label {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 12px 8px;
+                border: 2px solid #e2e8f0;
+                border-radius: 12px;
+                transition: all 0.3s ease;
+                background: white;
+            }
+
+            .role-option input[type="radio"]:checked+.role-label {
+                border-color: #667eea;
+                background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            }
+
+            .role-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 4px;
+                font-size: 20px;
+                transition: all 0.3s ease;
+            }
+
+            .role-option input[type="radio"]:checked+.role-label .role-icon {
+                transform: scale(1.1);
+            }
+
+            .role-icon.admin {
+                background: rgba(239, 68, 68, 0.1);
+                color: #ef4444;
+            }
+
+            .role-icon.staff {
+                background: rgba(245, 158, 11, 0.1);
+                color: #f59e0b;
+            }
+
+            .role-icon.student {
+                background: rgba(16, 185, 129, 0.1);
+                color: #10b981;
+            }
+
+            .role-name {
+                font-size: 13px;
+                font-weight: 600;
+                color: #4a5568;
+            }
+
+            .form-group {
+                margin-bottom: 16px;
+            }
+
+            .form-label {
+                display: block;
+                font-size: 14px;
+                font-weight: 600;
+                color: #2d3748;
+                margin-bottom: 8px;
+            }
+
+            .input-wrapper {
+                position: relative;
+            }
+
+            .input-icon {
+                position: absolute;
+                left: 16px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #a0aec0;
+                font-size: 18px;
+            }
+
+            .form-control {
+                width: 100%;
+                padding: 12px 16px 12px 48px;
+                font-size: 14px;
+                border: 2px solid #e2e8f0;
+                border-radius: 12px;
+                transition: all 0.3s ease;
+                background: white;
+                color: #2d3748;
+            }
+
+            .form-control:focus {
+                outline: none;
+                border-color: #667eea;
+                box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            }
+
+            .form-control::placeholder {
+                color: #cbd5e0;
+            }
+
+            .password-toggle {
+                position: absolute;
+                right: 16px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: none;
+                border: none;
+                color: #a0aec0;
+                cursor: pointer;
+                font-size: 18px;
+                padding: 4px;
+                transition: color 0.3s ease;
+            }
+
+            .password-toggle:hover {
+                color: #667eea;
+            }
+
+            .btn-login {
+                width: 100%;
+                padding: 16px;
+                font-size: 16px;
+                font-weight: 600;
+                color: white;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border: none;
+                border-radius: 12px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+                margin-top: 8px;
+            }
+
+            .btn-login:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            }
+
+            .btn-login:active {
+                transform: translateY(0);
+            }
+
+            .btn-login:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+            .alert {
+                padding: 14px 16px;
+                border-radius: 12px;
+                margin-bottom: 24px;
+                font-size: 14px;
+                display: none;
+                animation: slideDown 0.3s ease-out;
+            }
+
+            @keyframes slideDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .alert.show {
+                display: block;
+            }
+
+            .alert-danger {
+                background: #fee2e2;
+                color: #991b1b;
+                border-left: 4px solid #ef4444;
+            }
+
+            .alert-success {
+                background: #d1fae5;
+                color: #065f46;
+                border-left: 4px solid #10b981;
+            }
+
+            .footer-text {
+                text-align: center;
+                margin-top: 32px;
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 14px;
+            }
+
+            .spinner {
+                display: inline-block;
+                width: 16px;
+                height: 16px;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                border-top-color: white;
+                border-radius: 50%;
+                animation: spin 0.6s linear infinite;
+                margin-right: 8px;
+            }
+
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            /* Responsive */
+            @media (max-width: 480px) {
+                .login-card {
+                    padding: 32px 24px;
+                }
+
+                .role-selector {
+                    grid-template-columns: 1fr;
+                }
+
+                .logo-section h1 {
+                    font-size: 24px;
+                }
+            }
+        </style>
+</head>
+
+<body>
+    <div class="background-animation"></div>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h1>Welcome Back</h1>
+                <p>Student Feedback Management System</p>
+            </div>
+
+            <div id="alertContainer" class="alert"></div>
+
+            <form id="loginForm">
+                <!-- Role Selection -->
+                <div class="form-group">
+                    <label class="form-label">Select Your Role</label>
+                    <div class="role-selector">
+                        <div class="role-option">
+                            <input type="radio" name="role" value="super_admin" id="role-admin">
+                            <label for="role-admin" class="role-label">
+                                <div class="role-icon admin">
+                                    <i class="fas fa-user-shield"></i>
+                                </div>
+                                <span class="role-name">Admin</span>
+                            </label>
+                        </div>
+
+                        <div class="role-option">
+                            <input type="radio" name="role" value="staff" id="role-staff">
+                            <label for="role-staff" class="role-label">
+                                <div class="role-icon staff">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                </div>
+                                <span class="role-name">Staff</span>
+                            </label>
+                        </div>
+
+                        <div class="role-option">
+                            <input type="radio" name="role" value="student" id="role-student">
+                            <label for="role-student" class="role-label">
+                                <div class="role-icon student">
+                                    <i class="fas fa-user-graduate"></i>
+                                </div>
+                                <span class="role-name">Student</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Input -->
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email"
+                            required>
+                    </div>
+                </div>
+
+                <!-- Password Input -->
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="password" name="password" class="form-control"
+                            placeholder="Enter your password" required>
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Login Button -->
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+            </form>
+        </div>
+
+        <div class="footer-text">
+            <p>&copy; 2025 Student Feedback Management System</p>
+            <p style="margin-top: 8px; font-size: 13px; opacity: 0.8;">Developed by Pavithra</p>
+        </div>
+    </div>
+
+    <script>
+        // Password toggle
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const role = document.querySelector('input[name="role"]:checked');
+            const loginBtn = document.getElementById('loginBtn');
+            const alertContainer = document.getElementById('alertContainer');
+
+            // Validate role selection
+            if (!role) {
+                showAlert('Please select your role', 'danger');
+                return;
+            }
+
+            // Disable button and show loading
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<span class="spinner"></span> Signing in...';
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        role: role.value
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showAlert('Login successful! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = data.redirectUrl;
+                    }, 1000);
+                } else {
+                    showAlert(data.message || 'Login failed', 'danger');
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('An error occurred. Please try again.', 'danger');
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+            }
+        });
+
+        // Show alert function
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            alertContainer.className = `alert alert-${type} show`;
+            alertContainer.textContent = message;
+
+            setTimeout(() => {
+                alertContainer.classList.remove('show');
+            }, 5000);
+        }
+
+        // Auto-fill demo credentials on role selection
+        document.querySelectorAll('input[name="role"]').forEach(radio => {
+            radio.addEventListener('change', function () {
+                const emailInput = document.getElementById('email');
+                const passwordInput = document.getElementById('password');
+
+                // Show hint based on role
+                if (this.value === 'super_admin') {
+                    emailInput.placeholder = 'e.g., admin@system.local';
+                    passwordInput.placeholder = 'Password: admin123';
+                } else if (this.value === 'staff') {
+                    emailInput.placeholder = 'e.g., sarah.johnson@staff.local';
+                    passwordInput.placeholder = 'Password: staff123';
+                } else if (this.value === 'student') {
+                    emailInput.placeholder = 'e.g., john.smith@student.local';
+                    passwordInput.placeholder = 'Password: student123';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

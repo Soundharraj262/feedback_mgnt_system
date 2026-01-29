@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head') %>
+</head>
+
+<body>
+    <div class="main-layout">
+        <%- include('../partials/sidebar') %>
+
+            <div class="main-content">
+                <%- include('../partials/header') %>
+
+                    <main>
+                        <div class="fade-in">
+                            <!-- Page Header -->
+                            <div class="card mb-4"
+                                style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none;">
+                                <div class="card-body">
+                                    <h2
+                                        style="color: white; font-size: 1.75rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem;">
+                                        <i class="fas fa-paper-plane"></i>
+                                        Submit Feedback
+                                    </h2>
+                                    <p style="color: rgba(255,255,255,0.9); margin: 0;">Share your thoughts and concerns
+                                        with your assigned staff</p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-2" style="align-items: start;">
+                                <!-- Feedback Form -->
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title"
+                                            style="display: flex; align-items: center; gap: 0.75rem;">
+                                            <i class="fas fa-edit"></i>
+                                            Feedback Form
+                                        </h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <% if (assignedStaff) { %>
+                                            <!-- Staff Info -->
+                                            <div
+                                                style="padding: 1.25rem; background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%); border-radius: var(--radius-lg); margin-bottom: 2rem; border-left: 4px solid var(--warning-color);">
+                                                <div
+                                                    style="font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gray-600); margin-bottom: 0.75rem;">
+                                                    <i class="fas fa-info-circle"></i> Sending To
+                                                </div>
+                                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                                    <div
+                                                        style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--warning-color) 0%, var(--warning-dark) 100%); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.125rem;">
+                                                        <%= assignedStaff.staff_name.charAt(0) %>
+                                                    </div>
+                                                    <div>
+                                                        <div
+                                                            style="font-weight: 700; font-size: 1rem; color: var(--gray-900);">
+                                                            <%= assignedStaff.staff_name %>
+                                                        </div>
+                                                        <div
+                                                            style="font-size: 0.875rem; color: var(--gray-600); display: flex; align-items: center; gap: 0.5rem;">
+                                                            <i class="fas fa-envelope"></i>
+                                                            <%= assignedStaff.staff_email %>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Form -->
+                                            <form class="ajax-form" action="/student/submit" method="POST"
+                                                data-redirect="/student/feedback">
+                                                <div class="form-group">
+                                                    <label class="form-label">
+                                                        <i class="fas fa-heading"></i> Subject *
+                                                    </label>
+                                                    <input type="text" name="subject" class="form-control"
+                                                        placeholder="Brief description of your feedback" required
+                                                        maxlength="200">
+                                                    <small
+                                                        style="color: var(--gray-600); font-size: 0.8125rem; margin-top: 0.5rem; display: block;">
+                                                        <i class="fas fa-info-circle"></i> Keep it short and descriptive
+                                                    </small>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="form-label">
+                                                        <i class="fas fa-comment"></i> Your Feedback *
+                                                    </label>
+                                                    <textarea name="message" class="form-control" rows="10"
+                                                        placeholder="Share your thoughts, concerns, or suggestions..."
+                                                        required
+                                                        style="resize: vertical; min-height: 250px;"></textarea>
+                                                    <small
+                                                        style="color: var(--gray-600); font-size: 0.8125rem; margin-top: 0.5rem; display: block;">
+                                                        <i class="fas fa-info-circle"></i> Be clear and specific about
+                                                        your feedback
+                                                    </small>
+                                                </div>
+
+                                                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                                                    <button type="submit" class="btn btn-success btn-lg"
+                                                        style="flex: 1;">
+                                                        <i class="fas fa-paper-plane"></i> Submit Feedback
+                                                    </button>
+                                                    <a href="/student/dashboard" class="btn btn-secondary">
+                                                        <i class="fas fa-times"></i> Cancel
+                                                    </a>
+                                                </div>
+                                            </form>
+                                            <% } else { %>
+                                                <div style="text-align: center; padding: 3rem 2rem;">
+                                                    <div
+                                                        style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--danger-color) 0%, var(--danger-dark) 100%); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                                                        <i class="fas fa-exclamation-triangle"
+                                                            style="font-size: 2rem; color: white;"></i>
+                                                    </div>
+                                                    <h4 style="color: var(--gray-700); margin-bottom: 0.5rem;">No Staff
+                                                        Assigned</h4>
+                                                    <p style="color: var(--gray-600); margin-bottom: 1.5rem;">You need
+                                                        to be assigned to a staff member before you can submit feedback.
+                                                    </p>
+                                                    <a href="/student/dashboard" class="btn btn-primary">
+                                                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                                                    </a>
+                                                </div>
+                                                <% } %>
+                                    </div>
+                                </div>
+
+                                <!-- Guidelines Card -->
+                                <div class="card"
+                                    style="background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); color: white; border: none;">
+                                    <div class="card-body">
+                                        <div
+                                            style="width: 64px; height: 64px; background: rgba(255,255,255,0.2); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                                            <i class="fas fa-lightbulb" style="font-size: 2rem;"></i>
+                                        </div>
+                                        <h4 style="color: white; margin-bottom: 1.5rem; font-size: 1.25rem;">Feedback
+                                            Guidelines</h4>
+                                        <ul
+                                            style="list-style: none; padding: 0; margin: 0; color: rgba(255,255,255,0.95); line-height: 2;">
+                                            <li
+                                                style="display: flex; align-items: start; gap: 0.75rem; margin-bottom: 1rem;">
+                                                <i class="fas fa-check-circle"
+                                                    style="margin-top: 0.25rem; flex-shrink: 0;"></i>
+                                                <span><strong>Be Specific:</strong> Clearly describe the issue or
+                                                    suggestion</span>
+                                            </li>
+                                            <li
+                                                style="display: flex; align-items: start; gap: 0.75rem; margin-bottom: 1rem;">
+                                                <i class="fas fa-check-circle"
+                                                    style="margin-top: 0.25rem; flex-shrink: 0;"></i>
+                                                <span><strong>Be Respectful:</strong> Use polite and professional
+                                                    language</span>
+                                            </li>
+                                            <li
+                                                style="display: flex; align-items: start; gap: 0.75rem; margin-bottom: 1rem;">
+                                                <i class="fas fa-check-circle"
+                                                    style="margin-top: 0.25rem; flex-shrink: 0;"></i>
+                                                <span><strong>Be Constructive:</strong> Offer solutions when
+                                                    possible</span>
+                                            </li>
+                                            <li style="display: flex; align-items: start; gap: 0.75rem;">
+                                                <i class="fas fa-check-circle"
+                                                    style="margin-top: 0.25rem; flex-shrink: 0;"></i>
+                                                <span><strong>Be Patient:</strong> Staff will respond as soon as
+                                                    possible</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+
+                    <%- include('../partials/footer') %>
+            </div>
+    </div>
+
+    <script src="/js/main.js"></script>
+</body>
+
+</html>
